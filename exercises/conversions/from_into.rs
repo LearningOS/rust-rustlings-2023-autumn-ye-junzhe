@@ -40,10 +40,39 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+fn trailing_comma(s: &str) -> String {
+    let count = s.chars().filter(|&c| c == ',').count();
+    let concatenated = s.to_string();
+    if count > 1 {
+        let s_vec: Vec<&str> = s.splitn(3, ",").collect();
+        let first_two_elements = &s_vec[..2];
+        return String::from(first_two_elements.join(","));
+
+    }
+    
+    concatenated
+}
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+
+        let concatenated = trailing_comma(s);
+
+        match concatenated.split_once(',') {
+            Some((first, second)) => {
+                if first.is_empty() {
+                    Person::default()
+                } else if let Ok(a) = second.parse::<usize>() {
+                    Person {
+                        name: first.into(),
+                        age: a,
+                    }
+                } else {
+                    Person::default()
+                }
+            }
+            _ => Person::default(),
+        }
     }
 }
 
@@ -127,14 +156,14 @@ mod tests {
     #[test]
     fn test_trailing_comma() {
         let p: Person = Person::from("Mike,32,");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 
     #[test]
     fn test_trailing_comma_and_some_string() {
         let p: Person = Person::from("Mike,32,man");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 }

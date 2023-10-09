@@ -27,6 +27,8 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
+// Finished
+
 extern "Rust" {
     fn my_demo_function(a: u32) -> u32;
 
